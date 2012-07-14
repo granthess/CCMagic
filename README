@@ -1,0 +1,13 @@
+CCMagic is the "Custom Content" management program for users of Electronic Art's The Sims 3 game.
+
+The program is licensed under the GPL and is the user interface to the CC Magic content management program.
+
+For more information on CC-Magic or to contact the author, please visit http://sims3.the-prof.net/forums/
+
+This program is essentially an WPF gui wrapped over the top of the S3ToolKit.MagicEngine component.
+  
+  
+NOTE:  
+  Developers are encouraged to check out all projects in this series into the same folder tree so that the
+  Visual Studio solution files can find the subordinate projects.  To build the project, you should only need
+  to have the CC Magic solution loaded as it will load the projects from the other solutions automatically.
