@@ -18,6 +18,7 @@
 */
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
+using S3ToolKit.MagicEngine;
 
 namespace CCMagic.ViewModel
 {
@@ -41,6 +42,11 @@ namespace CCMagic.ViewModel
         
         public string Data { get; set; }
         public bool Enabled {get;private set;}
+
+        #region Pure Import from Engine
+        public Engine CCMEngine { get { return Engine.Instance; } }
+        #endregion
+
         /// <summary>
         /// Initializes a new instance of the MainViewModel class.
         /// </summary>
@@ -58,7 +64,7 @@ namespace CCMagic.ViewModel
             else
             {
                 // Code runs "for real"
-                Data = "Visible in run mode";
+                Data = "Visible in run mode";                
             }
         }
 
