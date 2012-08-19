@@ -64,7 +64,9 @@ namespace CCMagic.ViewModel
             else
             {
                 // Code runs "for real"
-                Data = "Visible in run mode";                
+                Data = "Visible in run mode";
+
+                CCMEngine.Initialize();
             }
         }
 
