@@ -2,7 +2,7 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="MainWindow" Height="350" Width="525">
-    <Grid DataContext="{Binding Main, Mode=OneWay, Source={StaticResource Locator}}">
+    <Grid DataContext="{Binding Source={StaticResource Locator}, Path=Main}">
         <TextBlock Text="{Binding Data}" HorizontalAlignment="Left" Height="26" Margin="8,110,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="199"/>
         <Button Command="{Binding MyCommand}" Content="Button" HorizontalAlignment="Left" Height="27" Margin="8,8,0,0" VerticalAlignment="Top" Width="155"/>
         <ListView ItemsSource="{Binding CCMEngine.GameInfo}"  Margin="32,150,60,39">
