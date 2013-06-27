@@ -29,6 +29,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using CCMagic.ViewModel;
+using S3ToolKit.MagicEngine.Database;
 
 namespace CCMagic
 {
@@ -37,9 +39,59 @@ namespace CCMagic
     /// </summary>
     public partial class MainWindow : Window
     {
+        public MainViewModel Vm { get { return (MainViewModel)TopGrid.DataContext; } }
+
         public MainWindow()
         {
             InitializeComponent();
         }
+
+        private void CFG_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (Vm != null)
+            {
+                Vm.CCMEngine.ViewContext.SaveChanges();
+            }
+        }
+
+        private void SETS_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (Vm != null)
+            {
+                Vm.CCMEngine.ViewContext.SaveChanges();
+            }
+        }
+
+        private void EnabledSetList_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            Vm.CCMEngine.CFGSetsToDisable.Clear();
+            foreach (var item in (sender as ListView).SelectedItems)
+            {
+                Vm.CCMEngine.CFGSetsToDisable.Add(item as SetEntity);
+            }
+            
+        }
+
+        private void DisabledSetList_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            Vm.CCMEngine.CFGSetsToEnable.Clear();
+            foreach (var item in (sender as ListView).SelectedItems)
+            {
+                Vm.CCMEngine.CFGSetsToEnable.Add(item as SetEntity);
+            }
+        }
+
+        private void Sets_Text_Changed(object sender, TextChangedEventArgs e)
+        {
+
+        }
+
+        private void TreeView_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
+        {
+            Vm.CCMEngine.CurrentSet = (sender as TreeView).SelectedItem as SetEntity;
+        }
+
+
+
     }
 }

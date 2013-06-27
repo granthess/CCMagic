@@ -1,17 +1,212 @@
 ﻿<Window x:Class="CCMagic.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="MainWindow" Height="350" Width="525">
-    <Grid DataContext="{Binding Source={StaticResource Locator}, Path=Main}">
-        <TextBlock Text="{Binding Data}" HorizontalAlignment="Left" Height="26" Margin="8,110,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="199"/>
-        <Button Command="{Binding MyCommand}" Content="Button" HorizontalAlignment="Left" Height="27" Margin="8,8,0,0" VerticalAlignment="Top" Width="155"/>
-        <ListView ItemsSource="{Binding CCMEngine.GameInfo}"  Margin="32,150,60,39">
-        	<ListView.View>
-        		<GridView>
-        			<GridViewColumn/>
-        		</GridView>
-        	</ListView.View>
-        </ListView>
-        
+        xmlns:db="clr-namespace:S3ToolKit.MagicEngine.Database;assembly=S3ToolKit.MagicEngine"
+        Title="MainWindow" Height="450" Width="915">
+
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="Dictionary1.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Window.Resources>
+    <Grid Name="TopGrid" DataContext="{Binding Source={StaticResource Locator}, Path=Main}" Background="SkyBlue">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="50*" />
+            <RowDefinition Height="345*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <Border BorderBrush="Black" BorderThickness="1" Grid.Row="0" Margin="2,2" CornerRadius="2" HorizontalAlignment="Left" Height="Auto">
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="{Binding Data}" HorizontalAlignment="Left" Height="26"  TextWrapping="Wrap" VerticalAlignment="Top" Width="199"/>
+                <Button Command="{Binding MyCommand}" Content="Button" HorizontalAlignment="Left" Height="27" VerticalAlignment="Top" Width="155"/>
+            </StackPanel>
+        </Border>
+
+        <Border BorderBrush="Black" BorderThickness="1" Grid.Row="2" Margin="2,2" CornerRadius="2" HorizontalAlignment="Left" Height="Auto">
+            <StatusBar Background="SkyBlue" Grid.Row="2" Height="Auto" HorizontalAlignment="Stretch" x:Name="statusBar1" VerticalAlignment="Top" >
+                <StatusBarItem >
+                    <ListBox  ItemsSource="{Binding GameInfo}" Background="Transparent" BorderBrush="#00000000">
+                        <ListBox.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <VirtualizingStackPanel Orientation="Horizontal" IsItemsHost="True" />
+                            </ItemsPanelTemplate>
+                        </ListBox.ItemsPanel>
+                    </ListBox>
+                </StatusBarItem>
+            </StatusBar>
+        </Border>
+        <Border BorderBrush="Green" BorderThickness="1" Margin="2" CornerRadius="2" Grid.Row="1" >
+            <TabControl  Background="SkyBlue" Grid.Row="1" HorizontalAlignment="Stretch"  x:Name="tabControl1" VerticalAlignment="Stretch">
+                <TabItem Header="Sets">
+                    <Grid>
+                        <Border >
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="142*" />
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="25*" MinWidth="180" MaxWidth="250"/>
+                                    <ColumnDefinition Width="100*" />
+                                </Grid.ColumnDefinitions>
+                                <StackPanel Grid.Column="1" Orientation="Vertical">
+                                    <Border CornerRadius="4" Height="Auto"  BorderBrush="Black" BorderThickness="1" Margin="2,2,2,2" Padding="2" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+                                        <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch" DataContext="{Binding Path=CCMEngine.CurrentSet}" Height="65.96" >
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="Auto" />
+                                                <RowDefinition Height="Auto" />
+                                                <RowDefinition Height="1*" />
+                                            </Grid.RowDefinitions>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="Auto" />
+                                                <ColumnDefinition Width="403*" />
+                                                <ColumnDefinition Width="76*" />
+                                                <ColumnDefinition Width="177*" />
+                                                <ColumnDefinition Width="40" />
+                                            </Grid.ColumnDefinitions>
+                                            <TextBlock Margin="4,0,0,0" Grid.Column="0" TextAlignment="Right" Text="Name" FontWeight="Bold"  />
+                                            <TextBox Margin="4,2,1,0" IsReadOnly="{Binding Path=IsDefault}" Grid.Column="1"  Text="{Binding UpdateSourceTrigger=PropertyChanged, Path=Name, ValidatesOnExceptions=True}" TextChanged="SETS_TextChanged" />
+                                            <TextBlock Margin="4,0,0,0" Grid.Column="0" Grid.Row="1" TextAlignment="Right" Text="Description" FontWeight="Bold"  />
+                                            <TextBox Margin="4,2,0,0" IsReadOnly="{Binding Path=IsDefault}"  Height="40" MaxHeight="40" TextWrapping="Wrap" AcceptsReturn="True"  Grid.Column="1" Grid.Row="1" Text="{Binding Description, UpdateSourceTrigger=PropertyChanged}" Grid.RowSpan="2" VerticalScrollBarVisibility="Auto" TextChanged="SETS_TextChanged" />
+                                            
+                                            <Image ToolTip="Rebuild Required" Visibility="{Binding Path=ShowDirty}"  HorizontalAlignment="Center" VerticalAlignment="Center" Width="32" Height="32" Grid.RowSpan="3" Grid.Column="4" Source="/CCMagic;component/Images/Icons/iconRebuildNeeded.png" />
+                                        </Grid>
+                                    </Border>
+                                </StackPanel>
+
+                                <Border Grid.RowSpan="2" CornerRadius="4" BorderBrush="Black" BorderThickness="1" Margin="2" Padding="2" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+                                    <Grid>
+
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="1*"/>
+                                            <RowDefinition Height="Auto"/>
+                                        </Grid.RowDefinitions>
+                                        <TextBlock TextAlignment="Center" FontWeight="Bold" Text="Sets" Grid.ColumnSpan="2" />
+
+                                        <!--<ListView Grid.Row="1" VerticalAlignment="Stretch" DisplayMemberPath="Name" ItemsSource="{Binding Path=SetsEntities}"  SelectedValue="{Binding Path=CurrentSelectedSet, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"  SelectionMode="Single" DataContext="{Binding}" Grid.ColumnSpan="2" />-->
+                                        <TreeView Name="SetsTreeView" Grid.Row="1" VerticalAlignment="Stretch" ItemsSource="{Binding Path=CCMEngine.RootSets}"  SelectedItemChanged="TreeView_SelectedItemChanged"   DataContext="{Binding}" Grid.ColumnSpan="2">
+                                            <TreeView.ItemContainerStyle>
+                                                <!--  This Style binds a TreeViewItem to a PersonViewModel.     -->
+                                                <Style TargetType="{x:Type TreeViewItem}">
+                                                    <Setter Property="IsExpanded" Value="{Binding IsExpanded, Mode=TwoWay}" />
+                                                    <Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay}" />
+                                                    <Setter Property="FontWeight" Value="Normal" />
+                                                    <Style.Triggers>
+                                                        <Trigger Property="IsSelected" Value="True">
+                                                            <Setter Property="FontWeight" Value="Bold" />
+                                                        </Trigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </TreeView.ItemContainerStyle>
+                                                               <TreeView.ItemTemplate>
+
+                                                <HierarchicalDataTemplate DataType="{x:Type db:SetEntity}" ItemsSource="{Binding Path=ChildSets}">
+                                                    <StackPanel  Orientation="Horizontal" >
+                                                        <TextBlock Text="{Binding Name}"></TextBlock>
+                                                    </StackPanel>
+                                                </HierarchicalDataTemplate> 
+                                            </TreeView.ItemTemplate>  
+                                        </TreeView> 
+
+                                        <StackPanel Orientation="Vertical" Grid.Column="0" Grid.Row="3">
+                                            <Button  Command="{Binding SETAdd}" Margin="2" Content="Add" Height="23" HorizontalAlignment="Stretch" />
+                                            <Button  Command="{Binding SETRemove}" Margin="2" Content="Remove" Height="23" HorizontalAlignment="Stretch"/>
+                                        </StackPanel>
+                                    </Grid>
+
+                                </Border>
+                            </Grid>
+                        </Border>
+                    </Grid>
+                </TabItem>
+                <TabItem Header="Collections" Visibility="Collapsed"/>
+                <TabItem Header="Configurations">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="128" />
+                            <RowDefinition Height="182*" />
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="20*"/>
+                            <ColumnDefinition Width="100*" />
+                        </Grid.ColumnDefinitions>
+                        <Border Grid.Column="1" CornerRadius="4" Height="Auto"  BorderBrush="Black" BorderThickness="1" Margin="2,2,2,2" Padding="2" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+                            <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch" DataContext="{Binding Path=CCMEngine.CurrentConfig}" >
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="28*" />
+                                    <RowDefinition Height="90*" />
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="1*" />
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Margin="4,0,0,0" TextAlignment="Right" Text="Name" FontWeight="Bold" Grid.RowSpan="2" />
+                                <TextBox Margin="4,2,0,0" IsReadOnly="{Binding Path=IsDefault}" Grid.Column="1" Name="CFGName" Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}" TextChanged="CFG_TextChanged" />
+                                <TextBlock Margin="4,2,0,0" Grid.Row="1" TextAlignment="Right" Text="Description" FontWeight="Bold" Grid.RowSpan="2" />
+                                <TextBox Margin="4,2,0,0" Grid.Row="1" IsReadOnly="{Binding Path=IsDefault}" MaxHeight="80" Name="CFGDesc" TextWrapping="Wrap" AcceptsReturn="True"  Grid.Column="1" Width="Auto" Text="{Binding Description, UpdateSourceTrigger=PropertyChanged}"  VerticalScrollBarVisibility="Auto" Grid.RowSpan="2" TextChanged="CFG_TextChanged" />
+                            </Grid>
+
+                        </Border>
+                        <Border Grid.Column="1" Grid.Row="1" Background="SkyBlue" CornerRadius="4" BorderBrush="Black" BorderThickness="1" Margin="2,0,2,2" Padding="2" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" >
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="45*"/>
+                                    <ColumnDefinition Width="10*"/>
+                                    <ColumnDefinition Width="45*"/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="23"/>
+                                    <RowDefinition Height="1*"/>
+                                </Grid.RowDefinitions>
+
+                                <TextBlock Margin="2" Text="Enabled Sets" Grid.Row="0" Grid.Column="0" FontWeight="Bold"/>
+                                <ListView x:Name="EnabledSetList" Grid.Row ="1" Grid.Column="0" DisplayMemberPath="Name" ItemsSource="{Binding Path=CCMEngine.EnabledSets}" SelectionChanged="EnabledSetList_SelectionChanged" />
+
+                                <StackPanel Margin="2" Grid.RowSpan="2" Grid.Column="1" Orientation="Vertical" VerticalAlignment="Center" Height="Auto">
+                                    <Button Margin="2" Width="50" Height="23" Command="{Binding CFGAddAllSets}" >
+                                        <Image Source="/CCMagic;component/Images/Icons/buttonDoubleLeft.png" />
+                                    </Button>
+                                    <Button Margin="2"   Width="50" Height="23" Command="{Binding CFGAddASet}" >
+                                        <Image Source="/CCMagic;component/Images/Icons/buttonSingleLeft.png" />
+                                    </Button>
+                                    <Button Margin="2"   Width="50" Height="23" Command="{Binding CFGRemoveASet}" >
+                                        <Image Source="/CCMagic;component/Images/Icons/buttonSingleRight.png" />
+                                    </Button>
+                                    <Button Margin="2"   Width="50" Height="23" Command="{Binding CFGRemoveAllSets}" >
+                                        <Image Source="/CCMagic;component/Images/Icons/buttonDoubleRight.png" />
+                                    </Button>
+                                </StackPanel>
+                                <TextBlock HorizontalAlignment="Right" Margin="2" Text="Disabled Sets" Grid.Row="0" Grid.Column="2" FontWeight="Bold"/>
+                                <ListView x:Name="DisabledSetList" Margin="2" Grid.Row="1" Grid.Column="2" DisplayMemberPath="Name" ItemsSource="{Binding Path=CCMEngine.DisabledSets}" SelectionChanged="DisabledSetList_SelectionChanged" />
+                            </Grid>
+                        </Border>
+                        <Border Grid.RowSpan="2" CornerRadius="4" BorderBrush="Black" BorderThickness="1" Margin="2" Padding="2" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="1*"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+                                <TextBlock Grid.Row="0" TextAlignment="Center" FontWeight="Bold" Text="Configurations"/>
+                                <!-- <ListView Grid.Row="1" VerticalAlignment="Stretch" x:Name="listView2" DisplayMemberPath="Name" ItemsSource="{Binding mgrSettings.mgrConfigs.Configurations}"  SelectedValuePath="Name"  SelectedValue="{Binding mgrSettings.mgrConfigs.CurrentConfigName}" SelectionMode="Single" />-->
+                                <ListView Grid.Row="1" VerticalAlignment="Stretch" x:Name="listView2" DisplayMemberPath="Name" SelectionMode="Single" ItemsSource="{Binding Path=CCMEngine.Configurations.Local}" SelectedItem="{Binding Path=CCMEngine.CurrentConfig}" />
+                                <StackPanel Grid.Row="2" Orientation="Vertical">
+                                    <Button Margin="2" Command="{Binding CFGAdd}" Content="Add" Height="23" HorizontalAlignment="Stretch" />
+                                    <Button Margin="2" Command="{Binding CFGRemove}" Content="Remove" Height="23" HorizontalAlignment="Stretch"/>
+                                </StackPanel>
+                            </Grid>
+                        </Border>
+                    </Grid>
+                </TabItem>
+                <TabItem Header="Options"/>
+                <TabItem Header="Status"/>
+            </TabControl>
+        </Border>
+
+
+
     </Grid>
 </Window>
